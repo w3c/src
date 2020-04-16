@@ -1,0 +1,159 @@
+@startuml
+
+autonumber
+hide footbox
+skinparam ParticipantPadding 20
+skinparam BoxPadding 10
+
+title Returning Recognised Consumer
+
+actor Consumer as Consumer
+participant Merchant as Merchant <<Website>>
+
+box "Web Browser Environment"
+  participant "Web Browser" as Browser <<User-Agent>>
+  participant "Indexed DB" as DB <<Browser Storage>>
+  participant "Browser Window" as Window <<Browser Window>>
+end box
+
+box "Common Payment Handler"
+  participant "Common SRC\nPayment Handler" as PH <<Payment Handler>>
+  participant "Common SRC\nPayment Handler Page" as Page <<Web Page>>
+end box
+
+box "SRC System"
+  participant "SRCI" as SRCI <<Web App>>
+end box
+
+activate Consumer
+activate Merchant
+activate Browser
+
+Consumer->Merchant: Checkout Intent
+Merchant->Browser: **Payment Request API** Create\n* List of Supported SRC Payment Method URLs\n* Payment Request Data\n     - SRCI URL
+note right
+  Payment Request gets created provding list of supported
+  SRC Payment Methods along with the Payment Request Data
+
+  Each of the Payment Method URLs specifies the same
+  default SRC Common Payment Handler as default, which
+  is auto-installable in the Browser.
+
+  The SRCI URL provided will be propagated to SRC Common
+  Payment Handler to get the Window redirected to.
+end note
+return //Payment Request Reference//
+
+note over Merchant, Browser
+  Merchant calls **HasEnrolledInstruments** to check is SRC Payment
+  Methods are supported and Cosumer can be recognised locally.
+end note
+group Has Enrolled Instruments
+Merchant->Browser: **Payment Request API** HasEnrolledInstrument\n* Payment Request Reference
+Browser->PH: **Payment Handler API** CanMakePayment\n* List of Supported SRC Payment Method URLs\n* Payment Request Data\n     - SRCI URL
+activate PH
+note left
+  Web Browser initiates CanMakePayment check
+  for the installed SRC Common Payment Handler.
+end note
+PH->DB: Read SRC Profile Long-lived Token
+activate DB
+note right
+  SRC Common Payment Handler verifies if the
+  Long-lived Token is present in IndexDB.
+  It returns //True// to indicate
+  the Consumer can be recognised.
+end note
+return * SRC Profile Long-lived Token
+return //True//
+Browser-->Merchant: //True//
+note right
+  //True// indicates that SRC Common Payment Handler
+  is ready to handle "low friction" checkout.
+end note
+end group
+Merchant->Merchant: Display Pay Button
+activate Merchant
+Consumer->Merchant: Clik Pay Button
+deactivate Merchant
+note over Merchant, Browser
+  Merchant calls **Show** to launch Payment Request flow by the Browser. 
+end note
+group Show
+Merchant->Browser: **Payment Request API** Show\n* Payment Request Reference
+
+group Payment Handler Eligibility Check
+note over Browser
+  **Future**: This step is likely to be removed
+  from Payment Handler API.
+end note
+Browser->PH: **Payment Handler API** CanMakePayment\n* List of Supported SRC Payment Method URLs\n* Payment Request Data\n     - SRCI URL
+activate PH
+note left
+  Web Browser initiates CanMakePayment
+  check for the installed SRC Common
+  Payment Handler.
+end note
+note right
+  SRC Common Payment Handler returns
+  //True// to allow Payemnt Request
+  to be executed.
+end note
+return //True//
+end group
+
+note over Browser, PH
+  There is only single SRC Common Payment Handler installed in the browser for the specified Payment Method, so the browser will skip the payment sheet and invoke
+  the Payment Handler. The SRC Common Payment Handler supports full delagation and will provide shipping address and contact details when requested by the merchant.
+end note
+Browser->PH: **Payment Handler API** Invoke SRC Common Payment Handler\n* List of Supported SRC Payment Method URLs\n* Payment Request Data\n     - SRCI URL
+activate PH
+
+PH->DB: Read SRC Profile Long-lived Token
+activate DB
+return * SRC Profile Long-lived Token
+
+PH-\Window: Open Window\n* Payment Handler Page URL
+activate Window
+
+Window-\Page: Request Payment Handler Page
+activate Page
+PH->Page: **Window.postMessage**: Send Data\n* Payment Request Data\n* SRCI URL
+note right
+    SRC Common Payment Handler selects the SRCI which
+    will handle the checkout based on the SRCI URL
+    or SRCI ID provided in the request.
+end note
+Page-\SRCI: **Iframe**: Open SRCI Web App
+activate SRCI
+Page->SRCI: **Window.postMessage**: Send Data\n* Payment Request Data\n* SRC Profile Long-lived Token
+note left
+    SRC Common Payment Handler Page redirects
+    to the SRCI Web App to complete the checkout.
+end note
+
+group Checkout Process
+note over SRCI
+    SRCI handles the checkout process and returns
+    the result back to the SRC Common Payment Handler
+end note
+end group
+
+SRCI-\Page: **Window.postMessage**: Send Result Data\n* Payload / Correlation ID
+deactivate SRCI
+Page->PH: **Window.postMessage**: Send Result Data\n* Payload / Correlation ID
+deactivate Page
+note right
+    SRC Common Payment Handler Page sends
+    data back to SRC Common Payment Handler.
+end note
+PH-\\Window!!: Close Window
+
+PH-->Browser: **Payment Handler API** Result\n* Payload / Correlation ID
+deactivate PH
+Browser-->Merchant: **Payment Request API** Result\n* Payload / Correlation ID
+end group
+
+Merchant-->Consumer: Checkout Completed
+
+@enduml
