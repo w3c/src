@@ -32,7 +32,7 @@ activate Browser
 Consumer->Merchant: Checkout Intent
 Merchant->Browser: **Payment Request API** Create\n* List of Supported SRC Payment Method URLs\n* Payment Request Data\n     - SRCI URL
 note right
-  Payment Request gets created provding list of supported
+  Payment Request gets created providing list of supported
   SRC Payment Methods along with the Payment Request Data
 
   Each of the Payment Method URLs specifies the same
@@ -46,7 +46,7 @@ return //Payment Request Reference//
 
 note over Merchant, Browser
   Merchant calls **HasEnrolledInstruments** to check is SRC Payment
-  Methods are supported and Cosumer can be recognised locally.
+  Methods are supported and Consumer can be recognized locally.
 end note
 group Has Enrolled Instruments
 Merchant->Browser: **Payment Request API** HasEnrolledInstrument\n* Payment Request Reference
@@ -93,14 +93,14 @@ note left
 end note
 note right
   SRC Common Payment Handler returns
-  //True// to allow Payemnt Request
+  //True// to allow Payment Request
   to be executed.
 end note
 return //True//
 end group
 note over Browser, PH
   There is only single SRC Common Payment Handler installed in the browser for the specified Payment Method, so the browser will skip the payment sheet and invoke
-  the Payment Handler. The SRC Common Payment Handler supports full delagation and will provide shipping address and contact details when requested by the merchant.
+  the Payment Handler. The SRC Common Payment Handler supports full delegation and will provide shipping address and contact details when requested by the merchant.
 end note
 
 Browser->PH: **Payment Handler API** Invoke SRC Common Payment Handler\n* List of Supported SRC Payment Method URLs\n* Payment Request Data\n     - SRCI URL
@@ -111,7 +111,7 @@ activate DB
 return //No Data//
 note right
     SRC Common Payment Handler cannot read
-    long-lived tokan for the first time user.
+    long-lived token for the first time user.
 end note
 
 PH-\Window: Open Window\n* Payment Handler Page URL
@@ -144,14 +144,14 @@ SRCI->Page: **Window.postMessage**: Send Result Data\n* Payload / Correlation ID
 deactivate SRCI
 note right
   If user gives consent to be
-  rembered by the DCF SRC Profile
+  remembered by the DCF SRC Profile
   Long-Lived Token is returned
 end note
 Page->PH: **Window.postMessage**: Send Result Data\n* Payload / Correlation ID\n* SRC Profile Long-lived Token
 deactivate Page
 PH->DB: Store SRC Profile Long-lived Token\n* SRC Profile Long-lived Token
 note left
-    SRC Common Payment Handler stores SRC Prifile Long-lived
+    SRC Common Payment Handler stores SRC Profile Long-lived
     Token locally in IndexDB, so it can be used at the later
     stage for recognition of the returning consumer.
 end note
