@@ -25,7 +25,7 @@ activate Browser
 Consumer->Merchant: Checkout Intent
 Merchant->Browser: **Payment Request API** Create\n* List of Supported SRC Payment Method URLs\n* Payment Request Data\n     - SRCI URL
 note right
-  Payment Request gets created provding list of supported
+  Payment Request gets created providing list of supported
   SRC Payment Methods along with the Payment Request Data
 
   The Browser uses the Build-in SRC Payment Handler for each
@@ -37,8 +37,8 @@ end note
 return //Payment Request Reference//
 
 note over Merchant, Browser
-  Merchant calls **HasEnrolledInstruments** to check is SRC Payment
-  Methods are supported and Cosumer can be recognised locally.
+  Merchant calls **HasEnrolledInstrument** to check is SRC Payment
+  Methods are supported and Consumer can be recognized locally.
 end note
 group Has Enrolled Instruments
 Merchant->Browser: **Payment Request API** HasEnrolledInstrument\n* Payment Request Reference
@@ -53,7 +53,7 @@ note right
   Built-in SRC SRC Payment Handler checks if
   SRC Profile Long-lived Token is present.
   It returns //True// to indicate the Consumer
-  can be recognised.
+  can be recognized.
 end note
 return //True//
 Browser-->Merchant: //True//
@@ -64,7 +64,7 @@ end note
 end group
 Merchant->Merchant: Display Pay Button
 activate Merchant
-Consumer->Merchant: Clik Pay Button
+Consumer->Merchant: Click Pay Button
 deactivate Merchant
 note over Merchant, Browser
   Merchant calls **Show** to launch Payment Request flow by the Browser. 
@@ -104,7 +104,7 @@ SRCI-\PH: **Window.postMessage**: Send Result Data\n* Payload / Correlation ID\n
 deactivate SRCI
 note right
   If user gives consent to be
-  rembered by the DCF SRC Profile
+  remembered by the DCF SRC Profile
   Long-Lived Token is returned
 end note
 PH-\\Window!!: Close Window
