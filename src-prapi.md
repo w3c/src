@@ -130,12 +130,12 @@ The first approach provides a cleaner uninstallation than the second.
 
 There might be multiple architectures for built-in payment method support, such as:
 
-* The browser acts as common payment handler as well as DCF and removing the necessity for SRCIs to render the card list
-The browser is an SRC-I. In this case, presumably the browser would ignore any merchant-specific SRC-I. This approach has several advantages:
-   * The UX is built into the browser, reducing the burden on PSPs
+* The browser acts plays the DCF role of SRC. By doing so, the browser removes the need for the merchant-specified SRC-I to render the card list. This approach has several advantages:
+   * The UX is built into the browser, reducing the burden on PSPs would would otherwise have to integrate into the Common Payment Handler.
    * Where user identity is known to the browser, it may be possible to create longer lasting sessions.
-* The browser implements a container analogous to the Common Payment Handler
-* The browser interacts with another piece of software (e.g., built into the operating system) through a proprietary mechanism. That piece of software is a container analogous to the Common Payment Handler.
+   * The user experience would likely be consistent across all card networks.
+* The browser itself implements a container analogous to the Common Payment Handler, and thus houses SRC-I code.
+* The browser interacts with another piece of software (e.g., built into the operating system) through a proprietary mechanism. That piece of software is a container analogous to the Common Payment Handler, and thus houses SRC-I code.
 
 The journeys below are described in a way that is independent of architectural choice (or at least strives to be). The browser is acting in multiple roles:
 
