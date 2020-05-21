@@ -176,6 +176,8 @@ There may be times when the user wishes to clear payment data from the browser. 
 
 ### Native Support for Payment Method Into the Browser
 
+<em>Note: It is possible that this option and the previous one can be combined; we are working on the relationship between these two sections.</em>
+
 Key benefits of this approach are:
 * Merchants or PSP can call existing Payment Request API (for SRC common payment handler approach or in combination with other payment methods).
 * PSPs do not need to do any custom work for rendering UX for browsers that support this capability. 
