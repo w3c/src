@@ -130,7 +130,7 @@ The first approach provides a cleaner uninstallation than the second.
 
 There might be multiple architectures for built-in payment method support, such as:
 
-* The browser acts plays the DCF role of SRC. By doing so, the browser removes the need for the merchant-specified SRC-I to render the card list. This approach has several advantages:
+* The browser plays SRC role of the DCF. By doing so, the browser removes the need for the merchant-specified SRC-I to render the card list. This approach has several advantages:
    * The UX is built into the browser, reducing the burden on PSPs would would otherwise have to integrate into the Common Payment Handler.
    * Where user identity is known to the browser, it may be possible to create longer lasting sessions.
    * The user experience would likely be consistent across all card networks.
