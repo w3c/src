@@ -57,10 +57,10 @@ Note that a browser can play multiple roles in this ecosystem:
 
 ## Identification
 
-* There will be one Payment Method Identifier per SRC system. All of these PMIs will share the same origin (domain name). 
-* The Payment Method Manifest associated with each PMI will refer to the same default payment handler, also hosted on the same origin. We refer to this as the Common Payment Handler.
-   * **Note**: For security reasons, a browser will not allow installation of cross-origin service workers. Thus, a payment method manifest from origin A cannot refer to a payment handler from origin B and expect it to be just-in-time installed. For that reason, we set an expectation here that the PMIs and Common Payment Handler share an origin.
-
+* There will be one Payment Method Identifier (PMI) per SRC system. Each PMI will have a different origin.
+* The Payment Method Manifest associated with each PMI will refer to the same default payment app, which will live at its own origin. We refer to this as the Common Payment Handler.
+   * **Note**: This proposed PMI architecture requires a change in Chrome to allow for a manifest at one origin to refer to a default payment app at another origin for JIT registration. If that change does not happen, we can still achieve our goals (JIT registration, skip-the-sheet, no wallet selector, SRC-system specific data blobs) by adding one more PMI to the architecture (that of the default payment app origin) that would appear in the call to Payment Request. 
+   
 FOR DISCUSSION: If a particular browser supports a payment method with a built-in payment handler, how does that interact with a payment method manifest from the owner of the payment method? Should it "just work" or should the payment method owner have some mechanism (e.g., via the payment manifest) to authorize built-in payment handler support from some or "all" browsers?
 
 ## Payment Handlers
@@ -130,7 +130,7 @@ The first approach provides a cleaner uninstallation than the second.
 
 There might be multiple architectures for built-in payment method support, such as:
 
-* The browser plays SRC role of the DCF. By doing so, the browser removes the need for the merchant-specified SRC-I to render the card list. This approach has several advantages:
+* The browser plays the SRC role of the DCF. By doing so, the browser removes the need for the merchant-specified SRC-I to render the card list. This approach has several advantages:
    * The UX is built into the browser, reducing the burden on PSPs would would otherwise have to integrate into the Common Payment Handler.
    * Where user identity is known to the browser, it may be possible to create longer lasting sessions.
    * The user experience would likely be consistent across all card networks.
