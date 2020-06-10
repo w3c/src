@@ -8,6 +8,8 @@ This is a proposed architecture for SRC through Payment Request API.
 
 Status: This document does not reflect consensus; it is for discussion.
 
+In this document we refer to current implementation of APIs in Chromium browsers. These references are for illustrative purposes only and not meant to imply that all browsers must provide the same user experience.
+
 # Value Proposition for SRC through Payment Request
 
 SRC implementations exist that do not use Payment Request. Here are the primary usability and security benefits of a Payment Request (and payment handler) approach.
