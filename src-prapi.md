@@ -41,7 +41,7 @@ SRC implementations exist that do not use Payment Request. Here are the primary 
 * In this document we mention in particular these SRC Roles (borrowing descriptions from the SRC specification):
    * SRC System: A technical platform that securely facilitates remote card payments between Consumers, Digital Payment Applications, SRC Initiators, SRC Participating Issuers and Digital Card Facilitators on behalf of one or more SRC Programmes. A Digital Payment Application is any payment-enabled application that facilitates a payment between the acceptance environment and a Customer using a Card within an SRC ecosystem.
    * SRC Initiator (SRC-I): A role that supports Checkout and/or the secure retrieval of Payment Data from the SRC System on behalf of a Digital Payment Application.
-   * Digital Card Facilitator (DCF): A role within the SRC ecosystem that provides a Consumer with access to one or more Digital Cards and facilitates the checkout experience.
+   * Digital Card Facilitator (DCF): A role within the SRC ecosystem that provides a Consumer with access to one or more Digital Cards and facilitates the checkout experience. In this architecture, DCF functionalities are not explicitly covered; this architecture "stops" at the role of the SRC-I.
 
 ## Web Payments Terminology
 
@@ -132,7 +132,7 @@ The first approach provides a cleaner uninstallation than the second.
 
 There might be multiple architectures for built-in payment method support, such as:
 
-* The browser plays the SRC role of the DCF. By doing so, the browser removes the need for the merchant-specified SRC-I to render the card list. This approach has several advantages:
+* The browser plays (at least some roles of) the SRC-I. By doing so, the browser removes the need for the merchant-specified SRC-I to render the card list. This approach has several advantages:
    * The UX is built into the browser, reducing the burden on PSPs would would otherwise have to integrate into the Common Payment Handler.
    * Where user identity is known to the browser, it may be possible to create longer lasting sessions.
    * The user experience would likely be consistent across all card networks.
